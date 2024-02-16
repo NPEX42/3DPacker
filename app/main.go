@@ -8,7 +8,9 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello, World")
+
+  
+
 
 	bytes, err := os.ReadFile("res/teapot.obj")
 	if err != nil {
@@ -17,11 +19,9 @@ func main() {
 
 	source := string(bytes)
 
-	fmt.Println(source)
 
 	lines := strings.Split(source, "\n")
 
-	fmt.Println(len(lines))
 
   var faces [][]int
   var positions [][3]float64
@@ -37,15 +37,15 @@ func main() {
     switch parts[0] {
 		case "v":
 			v := ParseVertex(parts[1:])
-			fmt.Printf("Vertex: %v\n", v)
+			//fmt.Printf("Vertex: %v\n", v)
       positions = append(positions, v)
     case "vn":
       normal := ParseVertex(parts[1:])
-      fmt.Printf("Normal: %v\n", normal)
+      //fmt.Printf("Normal: %v\n", normal)
       normals = append(normals, normal)  
     case "vt":
       uv := ParseVertex2D(parts[1:])
-      fmt.Printf("TexCoord: %v\n", uv)
+      //fmt.Printf("TexCoord: %v\n", uv)
       uvs = append(uvs, uv) 
 
 		case "f":
