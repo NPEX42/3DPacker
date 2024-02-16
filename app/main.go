@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/NPEX42/3DPacker/app/model"
 )
 
 func main() {
@@ -28,6 +30,7 @@ func main() {
   var normals [][3]float64
   var uvs [][2]float64
 
+  model := model.NewModel()
 
 	for _, line := range lines {
 		if len(line) == 0 {
@@ -39,19 +42,23 @@ func main() {
 			v := ParseVertex(parts[1:])
 			//fmt.Printf("Vertex: %v\n", v)
       positions = append(positions, v)
+      model.AddPosition(v)
     case "vn":
       normal := ParseVertex(parts[1:])
       //fmt.Printf("Normal: %v\n", normal)
-      normals = append(normals, normal)  
+      normals = append(normals, normal)
+      model.AddNormal(normal)
     case "vt":
       uv := ParseVertex2D(parts[1:])
       //fmt.Printf("TexCoord: %v\n", uv)
       uvs = append(uvs, uv) 
+      model.AddTexCoord(uv)
 
 		case "f":
       face := ParseTriangleVerts(parts[1:])
 			fmt.Printf("Face: %v\n", face)
       faces = append(faces, face)
+      model.AddIndices(face)
 		}
 	}
 
@@ -80,7 +87,7 @@ func main() {
   }
   s.WriteString("\n");
 
-  for _, normal := range uvs {
+  for _, normal := range uvs{
     for _, axis_value := range normal {
       s.WriteString(fmt.Sprintf("%02.5f ", axis_value))
     }
@@ -88,9 +95,19 @@ func main() {
   }
   s.WriteString("\n");
 
+  //fmt.Printf("% x", model.Bytes())
 
+  file, _ := os.OpenFile("Teapot.mdl", os.O_CREATE | os.O_WRONLY, os.ModePerm)
 
-  os.WriteFile("TestCube.mdl", []byte(s.String()), os.ModePerm);
+  //writer := gzip.NewWriter(file)
+
+  //writer.Write(model.Bytes())
+
+  //writer.Close()
+  file.Write(model.Bytes())
+  file.Close()
+
+  os.WriteFile("TestCube.tmdl", []byte(s.String()), os.ModePerm);
 
 }
 
