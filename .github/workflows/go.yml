@@ -22,5 +22,4 @@ jobs:
         go-version: '1.21.6'
 
     - name: Run
-      steps:
-        run: go run ./...
+      run: go run ./...
